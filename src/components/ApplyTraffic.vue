@@ -55,20 +55,20 @@ export default {
         );
       });
     };
-    const back = () => {
-      if (window.history.length > 1) {
-        window.history.back();
-      } else {
-        window.close();
-      }
-    };
+    // const back = () => {
+    //   if (window.history.length > 1) {
+    //     window.history.back();
+    //   } else {
+    //     window.close();
+    //   }
+    // };
     return {
       ruleForm,
       cpfRef,
       formData,
       asyncValidator,
       submit,
-      back,
+      // back,
     };
   },
   components: {
@@ -93,14 +93,14 @@ export default {
 };
 </script>
 <template>
-  <nut-navbar @on-click-back="back" title="预约临时通道">
+  <!-- <nut-navbar @on-click-back="back" title="预约临时通道">
     <template #left>
       <div>返回</div>
     </template>
     <template #right>
       <nut-icon class="right" name="share-n"></nut-icon>
     </template>
-  </nut-navbar>
+  </nut-navbar> -->
   <ChineseNumberPlateSelector ref="cpfRef" />
   <nut-form :model-value="formData" ref="ruleForm">
     <nut-form-item label="姓名" prop="name">

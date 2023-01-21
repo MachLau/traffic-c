@@ -12,7 +12,7 @@ axios.defaults.timeout = 50000;
 //   }
 // );
 const base =
-  location.href.indexOf("localhost") > -1 ? "http://127.0.0.1:7001" : "";
+  location.href.indexOf("localhost") > -1 ? "http://127.0.0.1:7001" : "https://service-elqz2i84-1307965096.gz.apigw.tencentcs.com/release/";
 function getSlotsRemain() {
   return axios.get(`${base}/api/get-remain`);
 }
