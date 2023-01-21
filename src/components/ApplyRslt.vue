@@ -27,6 +27,7 @@ export default {
   mounted() {
     this.value = window._applyRslt.id;
     this.clockNum = window._applyRslt.clockNum;
+    document.title="预约结果";
   },
 };
 </script>
@@ -37,7 +38,7 @@ export default {
   line-height: 26px;
   text-align: center;
   color: #000000;
-  margin-top: 9px;
+  margin-top: 18px;
 }
 .desc {
   font-size: 16px;
@@ -50,6 +51,7 @@ export default {
 .qrcode {
   display: flex;
   justify-content: center;
+  margin-top: 24px;
 }
 .hightlight {
   color: #f21f57;
