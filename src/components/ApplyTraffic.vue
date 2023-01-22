@@ -136,7 +136,7 @@ export default {
       <input
         class="nut-input-text"
         v-model="formData.tel"
-        placeholder="电话用于发送预约成功短信！"
+        placeholder="请填写联系电话"
         type="text"
       />
     </nut-form-item>
@@ -146,7 +146,7 @@ export default {
       required
       :rules="[{ required: true, message: '请选择通行时间' }]"
     >
-      <nut-radiogroup v-model="formData.applyTime" direction="horizontal">
+      <nut-radiogroup v-if="remains.length>0" v-model="formData.applyTime" direction="horizontal">
         <nut-radio
           v-for="item in remains"
           :key="item.clockNum"
@@ -158,9 +158,10 @@ export default {
           }}</nut-radio
         >
       </nut-radiogroup>
+      <div>暂未开放预约时间段</div>
     </nut-form-item>
     <nut-cell>
-      <nut-button block @click="submit" type="primary">预约</nut-button>
+      <nut-button block @click="submit" :disabled="remains.length===0" type="primary">{{remains.length>0?'预约':'暂未开放'}}</nut-button>
     </nut-cell>
   </nut-form>
 </template>
