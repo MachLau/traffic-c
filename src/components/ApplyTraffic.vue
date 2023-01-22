@@ -107,7 +107,12 @@ export default {
         <nut-switch v-model="formData.isNewPower" />
       </template>
     </nut-cell>
-    <nut-cell title="预约通行车辆车牌号"></nut-cell>
+    <nut-cell title="预约通行车辆车牌号">
+      <template v-slot:icon>
+        <span style="color: #fa2c19;
+    margin-right: 4px;">*</span>
+      </template>
+    </nut-cell>
     <ChineseNumberPlateSelector :isNewPower="formData.isNewPower" ref="cpfRef" />
   </nut-cell-group>
   <nut-form :model-value="formData" ref="ruleForm">
