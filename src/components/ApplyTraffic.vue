@@ -109,8 +109,7 @@ export default {
     </nut-cell>
     <nut-cell title="预约通行车辆车牌号">
       <template v-slot:icon>
-        <span style="color: #fa2c19;
-    margin-right: 4px;">*</span>
+        <span style="color: #fa2c19;margin-right: 4px;">*</span>
       </template>
     </nut-cell>
     <ChineseNumberPlateSelector :isNewPower="formData.isNewPower" ref="cpfRef" />

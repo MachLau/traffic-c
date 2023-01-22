@@ -1,15 +1,15 @@
 <template>
   <div>
-    <div v-if="applyData">
+    <div v-if="applyData&&applyData.applyClockNum">
       <div class="qrcode">
         <qrcode-vue :value="value" size="300"></qrcode-vue>
       </div>
-      <div class="title">恭喜你，预约成功！</div>
+      <div class="title">恭喜你，预约成功！<p style="color: #f21f57;">请截图保存当前页面，进港出示给工作人员</p></div>
       <div class="desc">
         预约通行车牌号为：<span class="hightlight">{{ applyData.number }}</span
         ><br />请于
         <span class="hightlight">{{ `${applyData.applyClockNum}:00-${applyData.applyClockNum + 1}:00` }}</span
-        >之间前往秀英港，走预约通道通行
+        >时段，通过打开百度地图或高德地图搜索“秀英港网约进港通道入口”导航进港。
       </div>
     </div>
     <div v-else class="qrcode">
@@ -48,7 +48,7 @@ export default {
   line-height: 26px;
   text-align: center;
   color: #000000;
-  margin-top: 28px;
+  margin-top: 16px;
 }
 .desc {
   font-size: 16px;

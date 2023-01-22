@@ -1,6 +1,6 @@
 <script setup>
 import ApplyTraffic from "../components/ApplyTraffic.vue";
-document.title="预约临时通道通行";
+document.title="秀英港网约进港通道入口";
 </script>
 
 <template>
