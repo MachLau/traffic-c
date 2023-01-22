@@ -21,11 +21,18 @@ http.interceptors.request.use(
   },
   (error) => Promise.reject(error),
 );
-const base ='https://service-h5avg25k-1307965096.gz.apigw.tencentcs.com/release'
+// const base ='https://service-h5avg25k-1307965096.gz.apigw.tencentcs.com/release'
+const base ='http://127.0.0.1:7002'
 function getSlotsRemain() {
   return axios.get(`${base}/api/get-remain`);
 }
 function applyAction(params) {
   return axios.get(`${base}/api/apply-slot`, {params});
 }
-export { getSlotsRemain, applyAction };
+function getRslt(params) {
+  return axios.get(`${base}/api/reslt`, {params});
+}
+function setSlots(params) {
+  return axios.get(`${base}/api/times-slots-set`, {params});
+}
+export { getSlotsRemain, applyAction,getRslt,setSlots };

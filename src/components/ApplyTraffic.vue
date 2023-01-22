@@ -3,14 +3,14 @@ import { ref, reactive } from "vue";
 import { Toast } from "@nutui/nutui";
 import router from "../router";
 import ChineseNumberPlateSelector from "./ChineseNumberPlateSelector.vue";
-import { getSlotsRemain } from "../request";
-import { applyAction } from "../request";
+import { getSlotsRemain,applyAction } from "../request";
 export default {
   setup() {
     const formData = reactive({
       name: "",
       tel: "",
-      applyClockNum: "",
+      applyTime: "",
+      isNewPower:false
     });
     const cpfRef = ref(null);
     const ruleForm = ref(null);
@@ -26,9 +26,8 @@ export default {
             (response) => {
               const { code, msg, data } = response.data;
               if (code == 200) {
-                console.log("applyAction", data);
-                window._applyRslt = data;
-                router.push("/rslt");
+                Toast.success(msg);
+                router.push({name:"rslt", query: { cph }});
               } else {
                 Toast.fail(msg);
               }
@@ -101,7 +100,16 @@ export default {
       <nut-icon class="right" name="share-n"></nut-icon>
     </template>
   </nut-navbar> -->
-  <ChineseNumberPlateSelector ref="cpfRef" />
+
+  <nut-cell-group>
+    <nut-cell title="是否新能源车">
+      <template v-slot:link>
+        <nut-switch v-model="formData.isNewPower" />
+      </template>
+    </nut-cell>
+    <nut-cell title="预约通行车辆车牌号"></nut-cell>
+    <ChineseNumberPlateSelector :isNewPower="formData.isNewPower" ref="cpfRef" />
+  </nut-cell-group>
   <nut-form :model-value="formData" ref="ruleForm">
     <nut-form-item label="姓名" prop="name">
       <input
@@ -129,19 +137,19 @@ export default {
     </nut-form-item>
     <nut-form-item
       label="预计通行时间"
-      prop="applyClockNum"
+      prop="applyTime"
       required
       :rules="[{ required: true, message: '请选择通行时间' }]"
     >
-      <nut-radiogroup v-model="formData.applyClockNum" direction="horizontal">
+      <nut-radiogroup v-model="formData.applyTime" direction="horizontal">
         <nut-radio
           v-for="item in remains"
           :key="item.clockNum"
           shape="button"
-          :label="item.clockNum"
+          :label="JSON.stringify(item)"
           :disabled="item.remain === 0"
           >{{
-            `${item.clockNum}:00-${item.clockNum + 1}:00 (${item.remain})`
+            `${item.date} ${item.clockNum}:00-${item.clockNum + 1}:00 (${item.remain})`
           }}</nut-radio
         >
       </nut-radiogroup>
@@ -151,3 +159,8 @@ export default {
     </nut-cell>
   </nut-form>
 </template>
+<style scoped>
+  /deep/.nut-cell-group__warp{
+    margin: 0;
+  }
+</style>

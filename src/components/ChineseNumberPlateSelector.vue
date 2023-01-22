@@ -1,5 +1,5 @@
 <template>
-  <div class="license-plate noselect">
+  <div :class="['license-plate noselect',{'cph-wrap-newpower':isNewPower}]">
     <div class="cph-wrap cph-wrap-shadow">
       <span><strong style="opacity: 0">苏</strong></span>
       <span class=""></span>
@@ -7,8 +7,8 @@
       <span class=""></span>
       <span class=""></span>
       <span class=""></span>
-      <!-- <span class=""></span> -->
       <span></span>
+      <span v-if="isNewPower" class=""></span>
     </div>
     <div class="cph-wrap" style="z-index: 2" @click="cphInputClick">
       <span
@@ -24,7 +24,7 @@
         <div
           class="keyboard"
           style="justify-content: flex-end"
-          v-if="activeIndex == 7"
+          v-if="isNewPower?activeIndex == 8:activeIndex == 7"
         >
           <span class="k-done">完成</span>
         </div>
@@ -81,6 +81,11 @@
 </template>
 <script>
 export default {
+  props:{
+    isNewPower:{
+      type:Boolean
+    }
+  },
   data: function () {
     return {
       provice: [
@@ -152,7 +157,7 @@ export default {
   methods: {
     clickBoard: function (e) {
       if (e.target.tagName.toLowerCase() == "span") {
-        if (e.target.className.indexOf("k") == -1 && this.cph.length < 7) {
+        if (e.target.className.indexOf("k") == -1 && this.cph.length < (this.isNewPower?8:7)) {
           this.cph.push(e.target.textContent);
         }
 
@@ -204,6 +209,7 @@ export default {
 .license-plate {
   height: 55px;
   position: relative;
+  margin: 12px 0;
 }
 .license-plate .cph-wrap {
   display: flex;
@@ -248,13 +254,16 @@ export default {
   background: #fff;
   width: 14%;
 }
-
+.cph-wrap-newpower .cph-wrap span,.cph-wrap-newpower .cph-wrap .active {
+  width: 12.5%;
+}
 .license-plate .keyboard-wrap {
   background: #cfd3dd;
   padding: 10px 2px 0;
   position: fixed;
   bottom: 0;
   width: 100%;
+  z-index: 10;
 }
 .license-plate .keyboard {
   display: flex;
