@@ -99,7 +99,14 @@ export default {
         }
       })
       console.log(s)
-      setSlots({date,random,slots:JSON.stringify(s)})
+      setSlots({date,random,slots:JSON.stringify(s)}).then(response=>{
+        console.log(response.data)
+        if(response.data.code===200){
+          Toast.success('设置成功！');
+        }else{
+          Toast.fail('网络异常，请重试！')
+        }
+      })
     };
     const radioVal = ref("");
     return {

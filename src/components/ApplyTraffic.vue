@@ -22,7 +22,7 @@ export default {
           Toast.fail("请输入您完整车牌号！");
         }
         if (valid) {
-          applyAction(Object.assign({ number: cph }, formData)).then(
+          applyAction(Object.assign({ number: encodeURIComponent(cph) }, formData)).then(
             (response) => {
               const { code, msg, data } = response.data;
               if (code == 200) {
@@ -82,11 +82,15 @@ export default {
   methods: {
     setRemains() {
       getSlotsRemain().then((response) => {
+        Toast.hide();
         this.remains = response.data.data;
       });
     },
   },
   mounted() {
+    Toast.loading('数据加载中...', {
+        duration: 0
+      });
     this.setRemains();
   },
 };
@@ -157,7 +161,7 @@ export default {
           }}</nut-radio
         >
       </nut-radiogroup>
-      <div>暂未开放预约时间段</div>
+      <div v-else>暂未开放预约时间段</div>
     </nut-form-item>
     <nut-cell>
       <nut-button block @click="submit" :disabled="remains.length===0" type="primary">{{remains.length>0?'预约':'暂未开放'}}</nut-button>
