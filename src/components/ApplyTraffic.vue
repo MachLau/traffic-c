@@ -170,7 +170,7 @@ export default {
         type="text"
       />
     </nut-form-item>
-    <nut-form-item label="数据日期" prop="date">
+    <nut-form-item label="预计通行日期" prop="date">
         <div
           class="date-desc"
           @click="
