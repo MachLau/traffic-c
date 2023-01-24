@@ -23,17 +23,6 @@
         >
         </nut-calendar>
       </nut-form-item>
-      <nut-form-item
-        label="随机校验码"
-        prop="random"
-      >
-        <input
-          class="nut-input-text"
-          placeholder="点这里输入"
-          v-model="formData.random"
-          type="text"
-        />
-      </nut-form-item>
       <nut-cell>
         <nut-row :gutter="10">
           <nut-col
@@ -70,7 +59,6 @@ export default {
     const date = `${d.getFullYear()}-${m>9?m:'0'+m}-${d.getDate()}`;
     const formData = reactive({
       date,
-      random: "",
       slots: [
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
       ],
@@ -91,7 +79,7 @@ export default {
     };
 
     const submit = () => {
-      const {date,random="",slots} =formData
+      const {date,slots} =formData
       let s={};
       slots.forEach((count,index)=>{
         if(count>0||count===-1){
@@ -99,7 +87,7 @@ export default {
         }
       })
       console.log(s)
-      setSlots({date,random,slots:JSON.stringify(s)}).then(response=>{
+      setSlots({date,slots:JSON.stringify(s)}).then(response=>{
         console.log(response.data)
         if(response.data.code===200){
           Toast.success('设置成功！');

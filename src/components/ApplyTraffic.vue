@@ -7,7 +7,6 @@ import { getSlotsRemain,applyAction } from "../request";
 export default {
   setup() {
     const formData = reactive({
-      name: "",
       tel: "",
       applyTime: "",
       isNewPower:false
@@ -97,15 +96,6 @@ export default {
 };
 </script>
 <template>
-  <!-- <nut-navbar @on-click-back="back" title="预约临时通道">
-    <template #left>
-      <div>返回</div>
-    </template>
-    <template #right>
-      <nut-icon class="right" name="share-n"></nut-icon>
-    </template>
-  </nut-navbar> -->
-
   <nut-cell-group>
     <nut-cell title="是否新能源车">
       <template v-slot:link>
@@ -120,14 +110,6 @@ export default {
     <ChineseNumberPlateSelector :isNewPower="formData.isNewPower" ref="cpfRef" />
   </nut-cell-group>
   <nut-form :model-value="formData" ref="ruleForm">
-    <nut-form-item label="姓名" prop="name">
-      <input
-        class="nut-input-text"
-        v-model="formData.name"
-        placeholder="请输入姓名"
-        type="text"
-      />
-    </nut-form-item>
     <nut-form-item
       label="联系电话"
       prop="tel"
@@ -145,10 +127,11 @@ export default {
       />
     </nut-form-item>
     <nut-form-item
-      label="预计通行时间"
+      label="预计通行时段"
       prop="applyTime"
+      :label-width="100"
       required
-      :rules="[{ required: true, message: '请选择通行时间' }]"
+      :rules="[{ required: true, message: '请选择通行时段' }]"
     >
       <nut-radiogroup v-if="remains.length>0" v-model="formData.applyTime" direction="horizontal">
         <nut-radio
