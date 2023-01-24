@@ -16,6 +16,7 @@ export default {
     const ruleForm = ref(null);
 
     const submit = () => {
+
       ruleForm.value.validate().then(({ valid, errors }) => {
         const cph = cpfRef.value.getCPH();
         if (cph.length < 7) {
@@ -164,7 +165,7 @@ export default {
       <div v-else>暂未开放预约时间段</div>
     </nut-form-item>
     <nut-cell>
-      <nut-button block @click="submit" :disabled="remains.length===0" type="primary">{{remains.length>0?'预约':'暂未开放'}}</nut-button>
+      <nut-button block @click="submit"  type="primary">{{remains.length>0?'预约':'暂未开放'}}</nut-button>
     </nut-cell>
   </nut-form>
 </template>

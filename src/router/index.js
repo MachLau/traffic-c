@@ -28,6 +28,11 @@ const router = createRouter({
       name: "us",
       component: () => import("../views/SettingView.vue"),
     },
+    {
+      path: "/tc-downlod",
+      name: "tc",
+      component: () => import("../views/DownloadView.vue"),
+    },
   ],
 });
 

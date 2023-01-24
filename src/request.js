@@ -21,8 +21,8 @@ http.interceptors.request.use(
   },
   (error) => Promise.reject(error),
 );
-const base ='https://service-h5avg25k-1307965096.gz.apigw.tencentcs.com/release'
-// const base ='http://127.0.0.1:7001'
+// const base ='https://service-h5avg25k-1307965096.gz.apigw.tencentcs.com/release'
+const base ='http://127.0.0.1:7001'
 function getSlotsRemain() {
   return axios.get(`${base}/api/get-remain`);
 }
@@ -35,4 +35,18 @@ function getRslt(params) {
 function setSlots(params) {
   return axios.get(`${base}/api/times-slots-set`, {params});
 }
-export { getSlotsRemain, applyAction,getRslt,setSlots };
+function downFile(params) {
+  const {userName,pwd,date}=params;
+    var eleLink = document.createElement('a');
+    eleLink.download = '预约信息-'+date;
+    eleLink.style.display = 'none';
+    // 字符内容转变成blob地址
+    var blob = new Blob([]);
+    eleLink.href = `${base}/api/toexecl?un=${userName}&filter=${pwd}&date=${date}`;
+    // 触发点击
+    document.body.appendChild(eleLink);
+    eleLink.click();
+    // 然后移除
+    document.body.removeChild(eleLink);
+}
+export { getSlotsRemain, applyAction,getRslt,setSlots,downFile };

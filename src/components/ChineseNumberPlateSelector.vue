@@ -20,14 +20,7 @@
     </div>
 
     <transition name="slide">
-      <div class="keyboard-wrap" @click="clickBoard" v-show="show_keyboard">
-        <div
-          class="keyboard"
-          style="justify-content: flex-end"
-          v-if="isNewPower?activeIndex == 8:activeIndex == 7"
-        >
-          <span class="k-done">完成</span>
-        </div>
+      <div class="keyboard-wrap" @click="clickBoard" v-show="show_keyboard&&activeIndex<(isNewPower?8:7)">
         <div v-if="activeIndex == 0">
           <div class="keyboard">
             <span :key="item" v-for="item in provice.slice(0, 10)">{{
@@ -165,15 +158,16 @@ export default {
           this.cph.pop();
         }
 
-        if (e.target.className == "k-done") {
-          // this.setPlateNumber(this.cph)
-          this.cphInputClick();
-          this.$emit("plate-number", this.cph);
-        }
+        // if (e.target.className == "k-done") {
+        //   // this.setPlateNumber(this.cph)
+        //   this.cphInputClick();
+        //   this.$emit("plate-number", this.cph);
+        // }
       }
     },
     cphInputClick: function () {
-      this.show_keyboard = !this.show_keyboard;
+      this.show_keyboard = true;
+      this.cph=[];
     },
     getCPH() {
       console.log("getCPH");
@@ -183,7 +177,7 @@ export default {
   computed: {
     activeIndex: function () {
       return this.cph.length;
-    },
+    }
   },
 };
 </script>

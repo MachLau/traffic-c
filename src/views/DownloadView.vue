@@ -23,44 +23,46 @@
         >
         </nut-calendar>
       </nut-form-item>
-      <nut-form-item
-        label="随机校验码"
-        prop="random"
-      >
-        <input
-          class="nut-input-text"
-          placeholder="点这里输入"
-          v-model="formData.random"
-          type="text"
-        />
-      </nut-form-item>
+
+    <nut-form-item
+      label="用户名"
+      prop="userName"
+      required
+      :rules="[
+        { required: true, message: '请填写用户名' }
+      ]"
+    >
+      <input
+        class="nut-input-text"
+        v-model="formData.userName"
+        placeholder="请填写用户名"
+        type="text"
+      />
+    </nut-form-item>
+    <nut-form-item
+      label="密码"
+      prop="pwd"
+      required
+      :rules="[
+        { required: true, message: '请填写密码' }
+      ]"
+    >
+      <input
+        class="nut-input-text"
+        v-model="formData.pwd"
+        placeholder="请填写密码"
+        type="password" 
+      />
+    </nut-form-item>
       <nut-cell>
-        <nut-row :gutter="10">
-          <nut-col
-            :span="3"
-            v-for="(slot, index) in formData.slots"
-            :key="index"
-            ><nut-input
-              :label="index || '0'"
-              class="slots-number"
-              label-align="center"
-              input-align="center"
-              placeholder="请输入数字"
-              v-model="formData.slots[index]"
-              type="number"
-            />
-          </nut-col>
-        </nut-row>
-      </nut-cell>
-      <nut-cell>
-        <nut-button block @click="submit" type="primary">设置</nut-button>
+        <nut-button block @click="submit" type="primary">下载</nut-button>
       </nut-cell>
     </nut-form>
   </div>
 </template>
 <script>
 import { ref, reactive, toRefs } from "vue";
-import {setSlots} from'../request';
+import { downFile } from "../request";
 import { Toast } from "@nutui/nutui";
 export default {
   components: {},
@@ -70,10 +72,8 @@ export default {
     const date = `${d.getFullYear()}-${m>9?m:'0'+m}-${d.getDate()}`;
     const formData = reactive({
       date,
-      random: "",
-      slots: [
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      ],
+      userName:"",
+      pwd:""
     });
     const ruleForm = ref(null);
     const state = reactive({
@@ -91,22 +91,13 @@ export default {
     };
 
     const submit = () => {
-      const {date,random="",slots} =formData
-      let s={};
-      slots.forEach((count,index)=>{
-        if(count>0||count===-1){
-          s[index||'0']=count;
+      ruleForm.value.validate().then(({ valid, errors }) => {
+        if (valid) {
+          downFile(formData);
+        } else {
+          console.log("error submit!!", errors);
         }
-      })
-      console.log(s)
-      setSlots({date,random,slots:JSON.stringify(s)}).then(response=>{
-        console.log(response.data)
-        if(response.data.code===200){
-          Toast.success('设置成功！');
-        }else{
-          Toast.fail('网络异常，请重试！')
-        }
-      })
+      });
     };
     const radioVal = ref("");
     return {
@@ -119,7 +110,7 @@ export default {
       closeSwitch,
       setChooseValue,
     };
-  },
+  }
 };
 </script>
 <style scoped>
