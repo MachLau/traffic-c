@@ -38,10 +38,8 @@ function setSlots(params) {
 function downFile(params) {
   const {userName,pwd,date}=params;
     var eleLink = document.createElement('a');
-    eleLink.download = '预约信息-'+date;
+    eleLink.download = `预约信息-${date}.xlsx`;
     eleLink.style.display = 'none';
-    // 字符内容转变成blob地址
-    var blob = new Blob([]);
     eleLink.href = `${base}/api/toexecl?un=${userName}&filter=${pwd}&date=${date}`;
     // 触发点击
     document.body.appendChild(eleLink);

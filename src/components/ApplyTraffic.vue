@@ -44,7 +44,7 @@ export default {
               const { code, msg, data } = response.data;
               if (code == 200) {
                 Toast.success(msg);
-                router.push({name:"rslt", query: { cph }});
+                router.push({name:"rslt", query: { cph,date:formData.date }});
               } else {
                 Toast.fail(msg);
               }

@@ -86,7 +86,8 @@ export default {
       const {date,slots} =formData
       let s={};
       slots.forEach((count,index)=>{
-        if(count>0||count===-1){
+        console.log('count',typeof count,count,count>0||count===-1)
+        if(count>0||count==-1){
           s[index||'0']=count;
         }
       })

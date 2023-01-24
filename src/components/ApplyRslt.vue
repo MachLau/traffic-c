@@ -22,6 +22,7 @@
 <script>
 import QrcodeVue from "qrcode.vue";
 import { getRslt } from "../request";
+import { Toast } from "@nutui/nutui";
 export default {
   components: {
     QrcodeVue,
@@ -33,11 +34,14 @@ export default {
     };
   },
   mounted() {
+    Toast.loading('数据加载中...', {
+        duration: 0
+      });
     this.value=location.href
-    console.log('222',this.$route)
     getRslt(this.$route.query).then((response)=>{
       const rslt=response.data.data
       this.applyData=rslt.length>0?rslt[0]:null;
+        Toast.hide();
     })
     document.title="预约结果";
   },
