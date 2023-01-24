@@ -77,13 +77,20 @@ export default {
   data() {
     return {
       remains: [],
+      currentH:0,
+      currentM:0
     };
   },
   methods: {
     setRemains() {
       getSlotsRemain().then((response) => {
         Toast.hide();
-        this.remains = response.data.data;
+        const {data,serverTs} = response.data;
+        this.remains = data;
+        const ts = new Date(serverTs);
+        this.currentH=ts.getHours();
+        this.currentM=ts.getMinutes();
+        console.log(this.currentH,this.currentM)
       });
     },
   },
@@ -139,9 +146,10 @@ export default {
           :key="item.clockNum"
           shape="button"
           :label="JSON.stringify(item)"
-          :disabled="item.remain === 0"
-          >{{
-            `${item.date} ${item.clockNum}:00-${item.clockNum + 1}:00 (${item.remain})`
+          :disabled="item.remain <= 0 || currentH>item.clockNum || ((currentH===item.clockNum)&&(currentM>=30))"
+          >
+          {{
+            `${item.clockNum}:00-${item.clockNum + 1}:00 (${item.remain})`
           }}</nut-radio
         >
       </nut-radiogroup>

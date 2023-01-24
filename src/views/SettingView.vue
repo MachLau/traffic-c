@@ -45,11 +45,15 @@
         <nut-button block @click="submit" type="primary">设置</nut-button>
       </nut-cell>
     </nut-form>
+
+  <nut-cell-group title="已设置数据&预约数" desc="剩余可预约数 / 可预约总数">
+    <nut-cell v-for="slot in remains" :title="`${slot.remain} / ${slot.total}`"  :desc="`${slot.clockNum}:00 - ${slot.clockNum + 1}:00`"></nut-cell>
+  </nut-cell-group>
   </div>
 </template>
 <script>
 import { ref, reactive, toRefs } from "vue";
-import {setSlots} from'../request';
+import {setSlots,getSlotsRemain} from'../request';
 import { Toast } from "@nutui/nutui";
 export default {
   components: {},
@@ -107,6 +111,25 @@ export default {
       closeSwitch,
       setChooseValue,
     };
+  },
+  data() {
+    return {
+      remains: []
+    };
+  },
+  methods: {
+    setRemains() {
+      getSlotsRemain().then((response) => {
+        Toast.hide();
+        const {data} = response.data;
+        console.log(data)
+        this.remains = data;
+      });
+    },
+  },
+  mounted() {
+    Toast.loading('数据加载中...', {duration: 0});
+    this.setRemains();
   },
 };
 </script>
