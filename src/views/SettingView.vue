@@ -47,7 +47,7 @@
     </nut-form>
 
   <nut-cell-group title="已设置数据&预约数" desc="剩余可预约数 / 可预约总数">
-    <nut-cell v-for="slot in remains" :title="`${slot.remain} / ${slot.total}`"  :desc="`${slot.clockNum}:00 - ${slot.clockNum + 1}:00`"></nut-cell>
+    <nut-cell v-for="slot in remains" :title="`${slot.remain} / ${slot.total}`"  :desc="`${slot.date} ${slot.clockNum}:00 - ${slot.clockNum + 1}:00`"></nut-cell>
   </nut-cell-group>
   </div>
 </template>
@@ -117,9 +117,14 @@ export default {
       remains: []
     };
   },
+  watch:{
+    'formData.date'(){
+      this.setRemains()
+    }
+  },
   methods: {
     setRemains() {
-      getSlotsRemain().then((response) => {
+      getSlotsRemain({date:this.formData.date}).then((response) => {
         Toast.hide();
         const {data} = response.data;
         console.log(data)
@@ -142,6 +147,9 @@ export default {
   flex-direction: column;
   padding-left: 0;
   padding-right: 0;
+}
+/deep/.nut-cell__title{
+  flex: 0.5;
 }
 /deep/.nut-input-label{
   width: auto !important;

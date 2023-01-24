@@ -1,18 +1,35 @@
 <script>
-import { ref, reactive } from "vue";
+import { ref, reactive,toRefs } from "vue";
 import { Toast } from "@nutui/nutui";
 import router from "../router";
 import ChineseNumberPlateSelector from "./ChineseNumberPlateSelector.vue";
 import { getSlotsRemain,applyAction } from "../request";
 export default {
   setup() {
+    const d = new Date();
+    const m=d.getMonth() + 1;
+    const date = `${d.getFullYear()}-${m>9?m:'0'+m}-${d.getDate()}`;
     const formData = reactive({
       tel: "",
       applyTime: "",
+      date,
       isNewPower:false
     });
     const cpfRef = ref(null);
     const ruleForm = ref(null);
+    const state = reactive({
+      isVisible: false,
+    });
+    const openSwitch = (param) => {
+      state[`${param}`] = true;
+    };
+    const closeSwitch = (param) => {
+      state[`${param}`] = false;
+    };
+    const setChooseValue = (param) => {
+      console.log("param", param);
+      formData.date = param[3];
+    };
 
     const submit = () => {
 
@@ -67,6 +84,10 @@ export default {
       formData,
       asyncValidator,
       submit,
+      ...toRefs(state),
+      openSwitch,
+      closeSwitch,
+      setChooseValue,
       // back,
     };
   },
@@ -77,22 +98,38 @@ export default {
   data() {
     return {
       remains: [],
+      currentD:0,
       currentH:0,
       currentM:0
     };
   },
+  watch:{
+    'formData.date'(){
+      this.setRemains()
+    }
+  },
   methods: {
     setRemains() {
-      getSlotsRemain().then((response) => {
+      getSlotsRemain({date:this.formData.date}).then((response) => {
         Toast.hide();
         const {data,serverTs} = response.data;
         this.remains = data;
         const ts = new Date(serverTs);
+        this.currentD=ts.getDate();
         this.currentH=ts.getHours();
         this.currentM=ts.getMinutes();
         console.log(this.currentH,this.currentM)
       });
     },
+
+    disabledRatio(item){
+      if(item.remain <= 0)return true;
+      const dateOfSelector = this.formData.date.split('-').pop();
+      if(dateOfSelector<this.currentD)return true
+      if(dateOfSelector>this.currentD)return false;
+      //同一天
+      return this.currentH>item.clockNum || ((this.currentH===item.clockNum)&&(this.currentM>=30))
+    }
   },
   mounted() {
     Toast.loading('数据加载中...', {
@@ -133,10 +170,31 @@ export default {
         type="text"
       />
     </nut-form-item>
+    <nut-form-item label="数据日期" prop="date">
+        <div
+          class="date-desc"
+          @click="
+            () => {
+              openSwitch('isVisible');
+            }
+          "
+        >
+          {{ formData.date }}
+        </div>
+
+        <nut-calendar
+          v-model:visible="isVisible"
+          :default-value="formData.date"
+          :show-title="false"
+          @close="closeSwitch('isVisible')"
+          @choose="setChooseValue"
+        >
+        </nut-calendar>
+      </nut-form-item>
     <nut-form-item
       label="预计通行时段"
       prop="applyTime"
-      :label-width="100"
+      :label-width="70"
       required
       :rules="[{ required: true, message: '请选择通行时段' }]"
     >
@@ -146,7 +204,7 @@ export default {
           :key="item.clockNum"
           shape="button"
           :label="JSON.stringify(item)"
-          :disabled="item.remain <= 0 || currentH>item.clockNum || ((currentH===item.clockNum)&&(currentM>=30))"
+          :disabled="disabledRatio(item)"
           >
           {{
             `${item.clockNum}:00-${item.clockNum + 1}:00 (${item.remain})`
@@ -161,7 +219,15 @@ export default {
   </nut-form>
 </template>
 <style scoped>
+
+.date-desc {
+  color: #00b897;
+  text-align: right;
+}
   /deep/.nut-cell-group__warp{
     margin: 0;
+  }
+  /deep/.nut-radio__button{
+    padding: 6px 12px;
   }
 </style>

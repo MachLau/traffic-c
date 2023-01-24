@@ -23,8 +23,8 @@ http.interceptors.request.use(
 );
 const base ='https://service-h5avg25k-1307965096.gz.apigw.tencentcs.com/release'
 // const base ='http://127.0.0.1:7001'
-function getSlotsRemain() {
-  return axios.get(`${base}/api/get-remain`);
+function getSlotsRemain(params) {
+  return axios.get(`${base}/api/get-remain`, {params});
 }
 function applyAction(params) {
   return axios.get(`${base}/api/apply-slot`, {params});
