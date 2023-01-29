@@ -47,4 +47,8 @@ function downFile(params) {
     // 然后移除
     document.body.removeChild(eleLink);
 }
-export { getSlotsRemain, applyAction,getRslt,setSlots,downFile };
+function delData(params){
+  return axios.get(`${base}/api/delData`, {params});
+}
+const uploadApi=`${base}/api/upload2`
+export { getSlotsRemain, applyAction,getRslt,setSlots,downFile,delData,uploadApi };

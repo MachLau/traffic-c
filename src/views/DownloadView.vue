@@ -18,6 +18,7 @@
           :default-value="formData.date"
           :show-title="false"
           :show-sub-title="false"
+          :start-date="`2023-01-25`"
           @close="closeSwitch('isVisible')"
           @choose="setChooseValue"
         >
@@ -55,14 +56,22 @@
       />
     </nut-form-item>
       <nut-cell>
-        <nut-button block @click="submit" type="primary">下载</nut-button>
+        <nut-button block @click="()=>{submit('download')}" type="primary">下载</nut-button>
+      </nut-cell>
+      <nut-cell>
+        <nut-button block @click="()=>{submit('del')}" type="primary">删除所选日期数据</nut-button>
       </nut-cell>
     </nut-form>
+  <nut-cell-group>
+    <nut-cell title="上传过港车辆数据" desc="仅能上传 xlsx 格式数据"></nut-cell>
+    <nut-uploader :url="url" @success="handleSucc" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" >
+    <nut-button type="success" size="small">上传文件</nut-button></nut-uploader>
+  </nut-cell-group>
   </div>
 </template>
 <script>
 import { ref, reactive, toRefs } from "vue";
-import { downFile } from "../request";
+import { downFile,delData,uploadApi } from "../request";
 import { Toast } from "@nutui/nutui";
 export default {
   components: {},
@@ -79,6 +88,7 @@ export default {
     const state = reactive({
       isVisible: false,
     });
+    const url = reactive('');
     const openSwitch = (param) => {
       state[`${param}`] = true;
     };
@@ -90,10 +100,17 @@ export default {
       formData.date = param[3];
     };
 
-    const submit = () => {
+    const submit = (type) => {
       ruleForm.value.validate().then(({ valid, errors }) => {
         if (valid) {
-          downFile(formData);
+          if(type==='download'){
+            downFile(formData);
+          }else if(type==='del'){
+            delData(formData).then(res=>{
+              Toast.success(res.data.msg)
+            });
+          }
+          
         } else {
           console.log("error submit!!", errors);
         }
@@ -103,6 +120,7 @@ export default {
     return {
       ruleForm,
       formData,
+      url,
       submit,
       radioVal,
       ...toRefs(state),
@@ -110,6 +128,24 @@ export default {
       closeSwitch,
       setChooseValue,
     };
+  },
+  data() {
+    return {
+      url: uploadApi,
+    };
+  },
+  mounted(){
+    this.url
+  },
+  methods:{
+    handleSucc({responseText}){
+      const rslt=JSON.parse(responseText);
+      if(rslt.code===200){
+        Toast.success(`成功上传 ${rslt.data} 条数据！`);
+      }else{
+        Toast.fail('上传失败，请稍后再试！');
+      }
+    }
   }
 };
 </script>
@@ -123,10 +159,14 @@ export default {
   padding-left: 0;
   padding-right: 0;
 }
+/deep/.nut-uploader{
+  margin: 16px 0 16px 16px;
+  border-radius: 6px;
+}
 /deep/.nut-input-label{
   width: auto !important;
 }
-  /deep/.nut-cell-group__warp{
-    margin: 0;
-  }
+/deep/.nut-cell-group__warp{
+  margin: 0;
+}
 </style>
